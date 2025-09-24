@@ -13,7 +13,7 @@ user images │   ├── Alice/ │   └── Bob/ └── face_db.json  
 
 ## Hardware Requirements
 
-- Arduino Uno/Nano (or compatible board)
+- Arduino Uno/Nano/Mega (or compatible board)
 - HC-SR04 ultrasonic sensor
   - Trig → Pin 6
   - Echo → Pin 7
