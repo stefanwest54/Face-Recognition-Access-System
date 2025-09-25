@@ -25,8 +25,12 @@ user images │   ├── Alice/ │   └── Bob/ └── face_db.json  
 
 - Arduino IDE to upload `motion_detection.ino`
 - Python 3.8 or higher
-- Python libraries:
-    deepFace cmd install: "pip install deepface opencv-python numpy pyserial"
+- Python libraries:"pip install deepface opencv-python numpy pyserial"
+  - This command will install:
+    deepface: A lightweight face recognition and facial attribute analysis framework.
+    opencv-python: The official Python bindings for OpenCV, a library for computer vision tasks.
+    numpy: A fundamental package for numerical computing with Python, providing support for arrays and matrices.
+    pyserial: A library that provides backends for accessing serial ports.
 
 
 ## Setup and Usage
