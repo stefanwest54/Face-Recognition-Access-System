@@ -1,85 +1,76 @@
-# Motion-Triggered Face Recognition Access System
+# Ultrasonic Activated Computer Vision Access Control System
 
-This project integrates an Arduino-based ultrasonic motion detector with a Python face recognition pipeline. The Arduino monitors distance changes and signals events to Python scripts, which then trigger a webcam for real-time face verification using DeepFace with the ArcFace model. If the detected face matches an enrolled user above a defined confidence threshold, access is granted.
+Author: Stefan M. West  
+Date: September 2025  
 
-## Project Structure
-project-root/ ├── motion_detection.ino                      # Arduino sketch: ultrasonic sensor and LED 
-indicators ├── motion_trigger.py                            # Python: listens to Arduino serial output and 
-launches recognition ├── enroll.py                          # Python: enrolls user images into a 
-face embedding database ├── realtime_access.py              # Python: performs real-time face 
-recognition via webcam ├── enroll/                          # Directory containing subfolders of 
-user images │   ├── Alice/ │   └── Bob/ └── face_db.json    # Generated face embedding database
+## Overview
+This project combines hardware (Arduino + ultrasonic sensor + LEDs) with software (Python + DeepFace + OpenCV) to create a motion‑triggered, computer vision–based access control system.  
 
+The system works as follows:
+1. The Arduino monitors distance using an ultrasonic sensor.  
+2. When motion is detected, the Arduino sends a `TRIGGER` message to the PC over serial.  
+3. The PC activates the webcam and runs facial recognition using ArcFace (DeepFace).  
+4. If the face matches an enrolled user above the configured threshold, access is granted and the PC sends `APPROVED` back to the Arduino.  
+5. The Arduino provides LED feedback to indicate system state and access results.  
 
-## Hardware Requirements
+---
 
-- Arduino Uno/Nano/Mega (or compatible board)
-- HC-SR04 ultrasonic sensor
-  - Trig → Pin 6
-  - Echo → Pin 7
-- LEDs for status feedback
-  - Red LED → Pin 12 (idle)
-  - Green LED → Pin 13 (trigger detected)
+## Components
+- Arduino board (Uno, Nano, or similar)  
+- HC‑SR04 ultrasonic sensor  
+- 3 LEDs (red, green, blue) with resistors  
+- Webcam connected to PC  
+- Python environment with required libraries  
 
-## Software Requirements
+---
 
-- Arduino IDE to upload `motion_detection.ino`
-- Python 3.8 or higher
-- Python libraries:"pip install deepface opencv-python numpy pyserial"
-  - This command will install:
-    deepface: A lightweight face recognition and facial attribute analysis framework.
-    opencv-python: The official Python bindings for OpenCV, a library for computer vision tasks.
-    numpy: A fundamental package for numerical computing with Python, providing support for arrays and matrices.
-    pyserial: A library that provides backends for accessing serial ports.
+## Program 1: Ultrasonic Activated Computer Vision Access Control (Python)
 
+**File:** `usacvac.py`  
 
-## Setup and Usage
+### Description
+- Listens for `TRIGGER` messages from Arduino.  
+- Opens the webcam and runs ArcFace facial recognition.  
+- Compares embeddings against a JSON database of enrolled users.  
+- Grants or denies access based on similarity threshold.  
+- Sends `APPROVED` back to Arduino if access is granted.  
 
-1. **Upload Arduino Code**  
- Open `motion_detection.ino` in the Arduino IDE, select the correct board and port, and upload. The Arduino will monitor distance and print "TRIGGER" over serial when motion is detected.
+### Configuration
+- `DB_PATH`: path to `face_db.json`  
+- `COM_PORT`: serial port for Arduino (e.g., `COM5`)  
+- `BAUD_RATE`: default `9600`  
+- `GRANT_THRESHOLD`: similarity threshold (default `0.70`)
 
-2. **Enroll Users**  
- Place user images in subfolders under `enroll/`, one folder per user. For example:
-    enroll/ ├── Alice/ │   ├── alice1.jpg │   └── alice2.jpg └── Bob/ ├── bob1.jpg └── bob2.jpg
-Run:
-    cmd: 'python enroll.py'
+### Usage 
+1.) Run:
+    ```bash
+    python usacvac.py
 
-This generates `face_db.json` containing embeddings for each user.
+### Requirements
+- Python 3.9+  
+- OpenCV (`cv2`)  
+- DeepFace  
+- NumPy  
+- PySerial  
 
-3. **Run Motion Trigger Listener**  
-Start the Python listener that waits for Arduino serial output:
-    cmd: 'python motion_trigger.py'
+---
 
-Adjust the serial port in the script if necessary. When "TRIGGER" is received, it launches `realtime_access.py`.
+## Program 2: Face Enrollment Utility (Python)
 
-4. **Real-Time Face Recognition**  
-`realtime_access.py` opens the webcam and compares detected faces against the enrolled database.  
-- Default threshold: 0.70  
-- If a match is found above threshold, access is granted.  
-- Otherwise, access is denied.  
-Press `q` to quit the webcam manually.
+**File:** `enroll.py`  
 
-## File Descriptions
+### Description
+- Enrolls new users by processing `.jpg` images in the `enroll/` directory.  
+- Generates ArcFace embeddings for each user.  
+- Averages embeddings across multiple images per user.  
+- Saves normalized embeddings into `face_db.json`.  
 
-- `motion_detection.ino`: Arduino sketch that reads the ultrasonic sensor, toggles LEDs, and sends "TRIGGER" over serial.
-- `motion_trigger.py`: Python script that listens to Arduino serial output and launches `realtime_access.py`.
-- `enroll.py`: Builds a face embedding database (`face_db.json`) from images in `enroll/` using DeepFace with ArcFace.
-- `realtime_access.py`: Opens the webcam, extracts embeddings, compares against the database, and grants or denies access.
-
-## Testing
-
-1. Place an object within x cm of the ultrasonic sensor.                # This can be tuned within Arduino code
-2. Arduino should switch LEDs (red to green) and print "TRIGGER".  
-3. Python listener should detect "TRIGGER" and open the webcam.  
-4. Present an enrolled face:  
-- If recognized, "APPROVED USER" is displayed and access is granted.  
-- If not recognized, "Denied" is displayed.
-
-## Troubleshooting
-
-- If the serial port is incorrect, update `COM_PORT` in `motion_trigger.py`.
-- If the camera is not found, ensure the webcam is connected and accessible by OpenCV.
-- If recognition accuracy is low, add more images per user and re-run `enroll.py`. Adjust the threshold as needed.
+### Usage
+1. Create a folder inside `enroll/` with the new user’s name.  
+2. Place one or more `.jpg` images of the user inside that folder.  
+3. Run:  
+   ```bash
+   python enroll.py
 
 ## License
 
