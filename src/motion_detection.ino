@@ -59,7 +59,7 @@ void loop() {
   delay(100);
 }
 
-// --- Ultrasonic distance function ---
+// Ultrasonic distance function
 float getDistance() {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -73,7 +73,7 @@ float getDistance() {
   return duration * 0.0343 / 2;
 }
 
-// --- Averaging filter ---
+// Averaging filter
 float getFilteredDistance() {
   const int samples = 5;
   float sum = 0;
