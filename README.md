@@ -43,8 +43,8 @@ The system works as follows:
 
 ### Usage 
 1.) Run:
-    ```bash
-    python usacvac.py
+
+        python usacvac.py
 
 ### Requirements
 - Python 3.9+  
@@ -68,9 +68,9 @@ The system works as follows:
 ### Usage
 1. Create a folder inside `enroll/` with the new user’s name.  
 2. Place one or more `.jpg` images of the user inside that folder.  
-3. Run:  
-   ```bash
-   python enroll.py
+3. Run:
+
+       python enroll.py
 
 ## License
 
