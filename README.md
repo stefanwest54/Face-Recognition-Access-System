@@ -4,21 +4,25 @@ Author: Stefan M. West
 Date: September 2025  
 
 ## Overview
-This project combines hardware (Arduino + ultrasonic sensor + LEDs) with software (Python + DeepFace + OpenCV) to create a motion‑triggered, computer vision–based access control system.  
+This project combines hardware (Arduino + 5V 2mA 1 channel relay + ultrasonic sensor + electromagnetic lock + LEDs) with software (Python + DeepFace + OpenCV) to create a motion‑triggered, computer vision–based access control system.  
 
 The system works as follows:
 1. The Arduino monitors distance using an ultrasonic sensor.  
 2. When motion is detected, the Arduino sends a `TRIGGER` message to the PC over serial.  
 3. The PC activates the webcam and runs facial recognition using ArcFace (DeepFace).  
 4. If the face matches an enrolled user above the configured threshold, access is granted and the PC sends `APPROVED` back to the Arduino.  
-5. The Arduino provides LED feedback to indicate system state and access results.  
+5. The Arduino provides LED feedback while powering solenoid lock for entry.  
 
 ---
 
 ## Components
-- Arduino board (Uno, Nano, or similar)  
+- Arduino board (Uno, Nano, or similar)
+- 5V 2mA 1 channel relay
+- breadboard
+- jumper wires
 - HC‑SR04 ultrasonic sensor  
-- 3 LEDs (red, green, blue) with resistors  
+- 3 LEDs (red, green, blue) with resistors
+- electromagnetic solenoid lock
 - Webcam connected to PC  
 - Python environment with required libraries  
 
@@ -33,7 +37,8 @@ The system works as follows:
 - Opens the webcam and runs ArcFace facial recognition.  
 - Compares embeddings against a JSON database of enrolled users.  
 - Grants or denies access based on similarity threshold.  
-- Sends `APPROVED` back to Arduino if access is granted.  
+- Sends `APPROVED` back to Arduino if access is granted.
+- Arduino allows power flow to solenoid for a few moments if unlocking.
 
 ### Configuration
 - `DB_PATH`: path to `face_db.json`  
