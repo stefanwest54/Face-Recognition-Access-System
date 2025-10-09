@@ -3,6 +3,7 @@ const int echoPin = 7;
 const int blueLED = 11;
 const int redLED  = 12;
 const int greenLED = 13;
+const int relay = 2;
 
 const float triggerDistance = 10;  // cm
 const float tolerance = 2;
@@ -15,11 +16,14 @@ void setup() {
   pinMode(redLED, OUTPUT);
   pinMode(greenLED, OUTPUT);
   pinMode(blueLED, OUTPUT);
+  pinMode(relay, OUTPUT);
 
   Serial.begin(9600);  
   
   digitalWrite(redLED, HIGH);
   digitalWrite(greenLED, LOW);
+  digitalWrite(blueLED, LOW);
+  digitalWrite(relay, HIGH);
 }
 
 void loop() {
@@ -31,31 +35,31 @@ void loop() {
     msg.trim();
 
     if (msg == "APPROVED") {
+      digitalWrite(relay, LOW);
       for (int i = 0; i < 3; i++) {
         digitalWrite(blueLED, HIGH);
         delay(300);
         digitalWrite(blueLED, LOW);
         delay(300);
       }
+      delay(1000);
+      digitalWirte(relay, HIGH);
     }
   }
 
-  // Ultrasonic trigger logic
+ // Ultrasonic trigger logic
   if (distance > 0 && abs(distance - triggerDistance) > tolerance) {
     if (!triggered) {
       triggered = true;
       digitalWrite(redLED, LOW);
       digitalWrite(greenLED, HIGH);
       Serial.println("TRIGGER");
-    }
-  } else {
-    if (triggered) {
-      triggered = false;
+      delay(1000);
       digitalWrite(redLED, HIGH);
       digitalWrite(greenLED, LOW);
+      triggered = false;
     }
   }
-
   delay(100);
 }
 
