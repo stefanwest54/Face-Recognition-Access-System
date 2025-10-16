@@ -1,17 +1,18 @@
-# Ultrasonic Activated Computer Vision Access Control System
+# RFID Computer Vision Access Control System (Man Trap)
 
 Author: Stefan M. West  
 Date: September 2025  
 
 ## Overview
-This project combines hardware (Arduino + 5V 2mA 1 channel relay + ultrasonic sensor + electromagnetic lock + LEDs) with software (Python + DeepFace + OpenCV) to create a motion‑triggered, computer vision–based access control system.  
+This project combines hardware (Arduino + 5V 2mA 1 channel relay + RFIO-RC522 + electromagnetic lock + LEDs) with software (Python + DeepFace + OpenCV + Arduino) to create an RFID activated, computer vision–based access control system to simulate a modern mantrap.  
 
 The system works as follows:
-1. The Arduino monitors distance using an ultrasonic sensor.  
-2. When motion is detected, the Arduino sends a `TRIGGER` message to the PC over serial.  
-3. The PC activates the webcam and runs facial recognition using ArcFace (DeepFace).  
-4. If the face matches an enrolled user above the configured threshold, access is granted and the PC sends `APPROVED` back to the Arduino.  
-5. The Arduino provides LED feedback while powering solenoid lock for entry.  
+1. The Arduino monitors for RFID presence.  
+2. When a card is detected, Arduino sends the UID to the PC over serial.  
+3. The PC approves or denies UID, if approved the PC activates the webcam and runs facial recognition using ArcFace (DeepFace).
+   If denied, PC sends `DENIED` over serial for LED indication 
+5. If the face matches an enrolled user above the configured threshold, access is granted and the PC sends `APPROVED` back to the Arduino.  
+6. The Arduino provides LED feedback while powering solenoid lock for entry.  
 
 ---
 
@@ -20,21 +21,23 @@ The system works as follows:
 - 5V 2mA 1 channel relay
 - breadboard
 - jumper wires
-- HC‑SR04 ultrasonic sensor  
+- RFIO-RC522 RFID tag reader  
 - 3 LEDs (red, green, blue) with resistors
 - electromagnetic solenoid lock
-- Webcam connected to PC  
+- Webcam connected to PC (Can use integrated webcam) 
 - Python environment with required libraries  
 
 ---
 
-## Program 1: Ultrasonic Activated Computer Vision Access Control (Python)
+## Program 1: UID Interpreter and Access Control (Python)
 
-**File:** `usacvac.py`  
+**File:** `trappem.py`  
 
 ### Description
-- Listens for `TRIGGER` messages from Arduino.  
-- Opens the webcam and runs ArcFace facial recognition.  
+- Listens for `UID` messages from Arduino.
+- Approves or denies UID based on saved users.
+- If denied, PC sends `DENIED` to Arduino for LED fedback.
+- If approved, PC opens the webcam and runs ArcFace facial recognition.  
 - Compares embeddings against a JSON database of enrolled users.  
 - Grants or denies access based on similarity threshold.  
 - Sends `APPROVED` back to Arduino if access is granted.
@@ -44,12 +47,12 @@ The system works as follows:
 - `DB_PATH`: path to `face_db.json`  
 - `COM_PORT`: serial port for Arduino (e.g., `COM5`)  
 - `BAUD_RATE`: default `9600`  
-- `GRANT_THRESHOLD`: similarity threshold (default `0.70`)
+- `GRANT_THRESHOLD`: similarity threshold (default `0.60`)
 
 ### Usage 
 1.) Run:
 
-        python usacvac.py
+        py trappem.py
 
 ### Requirements
 - Python 3.9+  
@@ -75,7 +78,7 @@ The system works as follows:
 2. Place one or more `.jpg` images of the user inside that folder.  
 3. Run:
 
-       python enroll.py
+       py enroll.py
 
 ## License
 
