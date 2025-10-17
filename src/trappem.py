@@ -10,9 +10,9 @@ import serial
 # CONFIG
 
 users = {
-    "D0 69 46 2B": "Stefan",
-    "A0 01 E8 2B": "Clint",
-    "F6 63 15 25": "Lindsay",
+    "D0 69 46 2B": "Jack",
+    "A0 01 E8 2B": "Alice",
+    "F6 63 15 25": "Mike",
 }
 
 DB_PATH = "face_db.json"
@@ -111,4 +111,5 @@ while True:
             run_face_recognition()
         else:
             print("[SERIAL] DENIED PERSONELLE: UNKNOWN UID")
+
             ser.write(b"DENIED\n")
