@@ -20,7 +20,6 @@ def save_db(db):
 
 db = load_db()
 
-# Process each person folder in ENROLL_DIR
 for person in os.listdir(ENROLL_DIR):
     person_dir = os.path.join(ENROLL_DIR, person)
     if not os.path.isdir(person_dir):
@@ -55,4 +54,5 @@ for person in os.listdir(ENROLL_DIR):
         print(f"Enrolled/updated {person} with UID {db[person]['rfid_uid']}")
 
 save_db(db)
+
 print(f"Saved {len(db)} identities to {DB_PATH}")
