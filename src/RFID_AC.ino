@@ -1,6 +1,3 @@
-//RFID activator for trappem.py
-//Author: Stefan West
-
 #include <SPI.h>
 #include <MFRC522.h>
 
