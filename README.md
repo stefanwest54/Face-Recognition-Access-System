@@ -24,6 +24,8 @@ The system works as follows:
 - RFIO-RC522 RFID tag reader  
 - 3 LEDs (red, green, blue) with resistors
 - electromagnetic solenoid lock
+- 3x Lithium Ion batteries
+- 1 battery holder for 3X 18650 12V Li-Ion
 - Webcam connected to PC (Can use integrated webcam) 
 - Python environment with required libraries  
 
