@@ -9,7 +9,7 @@ This project combines hardware (Arduino + 5V 2mA 1 channel relay + RFIO-RC522 + 
 The system works as follows:
 1. The Arduino monitors for RFID presence.  
 2. When a card is detected, Arduino sends the UID to the PC over serial.  
-3. The PC approves or denies UID, if approved the PC activates the webcam and runs facial recognition using ArcFace (DeepFace).
+3. DeepFace then checks .json file for UID, if approved the PC activates the webcam and runs facial recognition using ArcFace (DeepFace).
    If denied, PC sends `DENIED` over serial for LED indication 
 5. If the face matches an enrolled user above the configured threshold, access is granted and the PC sends `APPROVED` back to the Arduino.  
 6. The Arduino provides LED feedback while powering solenoid lock for entry.  
@@ -35,9 +35,9 @@ The system works as follows:
 
 ### Description
 - Listens for `UID` messages from Arduino.
-- Approves or denies UID based on saved users.
+- Approves or denies input based on saved UID.
 - If denied, PC sends `DENIED` to Arduino for LED fedback.
-- If approved, PC opens the webcam and runs ArcFace facial recognition.  
+- If approved, PC opens the webcam and runs DeepFace facial recognition.  
 - Compares embeddings against a JSON database of enrolled users.  
 - Grants or denies access based on similarity threshold.  
 - Sends `APPROVED` back to Arduino if access is granted.
@@ -68,10 +68,11 @@ The system works as follows:
 **File:** `enroll.py`  
 
 ### Description
-- Enrolls new users by processing `.jpg` images in the `enroll/` directory.  
+- Enrolls new users by processing `.jpg` images in the `enroll/` directory.
+- Accepts RFID UID for 2 factor authentication.
 - Generates ArcFace embeddings for each user.  
 - Averages embeddings across multiple images per user.  
-- Saves normalized embeddings into `face_db.json`.  
+- Saves normalized embeddings  and UID into `face_db.json`.  
 
 ### Usage
 1. Create a folder inside `enroll/` with the new user’s name.  
@@ -79,7 +80,9 @@ The system works as follows:
 3. Run:
 
        py enroll.py
-
+   
+5. Input unique UID number for each saved user.
+   
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
