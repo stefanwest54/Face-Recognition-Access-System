@@ -4,13 +4,11 @@ import cv2
 from deepface import DeepFace
 import serial
 
-# CONFIG
 DB_PATH = "face_db.json"
 COM_PORT = 'COM5'
 BAUD_RATE = 9600
 GRANT_THRESHOLD = 0.60  # tune after testing
 
-# HELPERS
 def b64_to_np(s):
     return np.frombuffer(base64.b64decode(s), dtype=np.float32)
 
@@ -23,7 +21,6 @@ def load_db():
     with open(DB_PATH, "r") as f:
         return json.load(f)
 
-# FACE VERIFICATION FUNCTION
 def verify_user(expected_name):
     cap = cv2.VideoCapture(1)
     if not cap.isOpened():
@@ -64,7 +61,7 @@ def verify_user(expected_name):
                 ser.write(b"APPROVED\n")
                 cap.release()
                 cv2.destroyAllWindows()
-                return  # return to serial loop
+                return  
 
         except Exception:
             # No face detected or other error
@@ -77,9 +74,8 @@ def verify_user(expected_name):
 
     cap.release()
     cv2.destroyAllWindows()
-    return  # always return to serial loop
+    return 
 
-# SERIAL LISTENER LOOP
 ser = serial.Serial(COM_PORT, BAUD_RATE, timeout=1)
 print("[ACTION] Program initializing...")
 print("[ACTION] Listening for RFID...")
@@ -104,8 +100,8 @@ while True:
             print(f"[SERIAL] APPROVED UID: {uid} belongs to {matched_user}")
             print("[ACTION] Opening webcam...")
             ser.write(b"UID_GOOD\n")
-            verify_user(matched_user)  # returns when done
-            # after return, loop continues and waits for next UID
+            verify_user(matched_user)  
+            
         else:
             print(f"[SERIAL] DENIED PERSONNEL: UNKNOWN UID {uid}")
             ser.write(b"DENIED\n")
