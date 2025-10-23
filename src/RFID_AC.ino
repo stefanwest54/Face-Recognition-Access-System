@@ -10,7 +10,6 @@ const int redLED   = 4;
 const int greenLED = 5;
 const int relay    = 2;
 
-
 void setup() {
   Serial.begin(9600);
   SPI.begin();
