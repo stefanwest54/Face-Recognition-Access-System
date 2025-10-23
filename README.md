@@ -81,7 +81,7 @@ The system works as follows:
 
        py enroll.py
    
-5. Input unique UID number for each saved user.
+5. Input unique UID number for each new saved user when prompted.
    
 ## License
 
